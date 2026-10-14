@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Taxi Weekly Riders Prediction — Predict the number of weekly taxi riders using a machine learning model.">
+    <title>Taxi Demand Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- Background blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="page-wrapper">
+
+        <!-- Header -->
+        <header class="site-header">
+            <div class="header-icon">🚕</div>
+            <h1>Taxi Demand Predictor</h1>
+            <p class="header-subtitle">Predict weekly ridership using market & pricing data</p>
+        </header>
+
+        <!-- Card -->
+        <main>
+            <div class="card">
+                <h2 class="card-title">Enter Market Details</h2>
+                <p class="card-desc">Fill in the fields below and click <strong>Predict</strong> to estimate weekly riders.</p>
+
+                <form id="predictForm" action="/predict" method="POST">
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="price">Price per Week ($)</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">💰</span>
+                                <input type="number" id="price" name="Priceperweek"
+                                       placeholder="e.g. 50" min="0" step="0.01" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="population">City Population</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">🏙️</span>
+                                <input type="number" id="population" name="Population"
+                                       placeholder="e.g. 1700000" min="0" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="income">Monthly Income ($)</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">💵</span>
+                                <input type="number" id="income" name="Monthlyincome"
+                                       placeholder="e.g. 12000" min="0" step="0.01" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="parking">Avg. Parking Cost / Month ($)</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">🅿️</span>
+                                <input type="number" id="parking" name="Averageparkingpermonth"
+                                       placeholder="e.g. 100" min="0" step="0.01" required>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <button type="submit" id="predictBtn" class="btn-predict">
+                        <span class="btn-text">Predict Weekly Riders</span>
+                        <span class="btn-icon">→</span>
+                    </button>
+
+                </form>
+
+                <!-- Result Box -->
+                {% if predict_text %}
+                <div class="result-box" id="resultBox">
+                    <div class="result-icon">📊</div>
+                    <p class="result-label">Prediction Result</p>
+                    <p class="result-value">{{ predict_text }}</p>
+                </div>
+                {% endif %}
+
+            </div>
+
+            <!-- Info cards -->
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">⚡</span>
+                    <h3>Instant Results</h3>
+                    <p>Get predictions in milliseconds powered by a trained ML model.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">📈</span>
+                    <h3>Data-Driven</h3>
+                    <p>Model trained on real-world taxi market data across multiple cities.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">🎯</span>
+                    <h3>High Accuracy</h3>
+                    <p>Linear regression model capturing key demand indicators precisely.</p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="site-footer">
+            <p>🚕 Taxi Demand Predictor &mdash; Powered by Machine Learning</p>
+        </footer>
+
+    </div>
+
+    <script>
+        // Animate result box on load if present
+        window.addEventListener('DOMContentLoaded', () => {
+            const resultBox = document.getElementById('resultBox');
+            if (resultBox) {
+                resultBox.classList.add('animate-in');
+                resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            // Button loading state
+            const form = document.getElementById('predictForm');
+            const btn  = document.getElementById('predictBtn');
+            form.addEventListener('submit', () => {
+                btn.classList.add('loading');
+                btn.querySelector('.btn-text').textContent = 'Predicting…';
+            });
+        });
+    </script>
+
+</body>
+</html>
